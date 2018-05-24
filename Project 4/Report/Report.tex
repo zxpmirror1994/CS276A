@@ -1,0 +1,184 @@
+\documentclass[10pt]{article}
+\usepackage{blindtext}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{array}
+\setlength{\parindent}{0em}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\graphicspath{ {/Users/Xiaopei/Documents/Coursework/Fall\ 2017/STATS\ M231/Project\ 4/Report}}
+\usepackage[margin=1in]{geometry}
+\title{Project 4: Face Social Traits and Political Election Analysis by SVM}
+\author{Xiaopei Zhang (004309991)}
+\date{\today}
+\begin{document}
+\maketitle
+\section*{\large{Task 1: Face Social Traits Classification (or Regression)}}
+	The goal of this task is to train binary SVMs (or SVRs) to predict the perceived traits (social attributes) from facial photographs. You can use the pre-computed facial key-point locations and extract HoG (histogram of oriented gradient) features using the enclosed MATLAB function.\\ 
+\section*{\small{1.1: Classification by Landmarks}}
+	In this section, we focus on using only the landmarks of politicians to predict their traits. First of all, we perform 5-fold cross validation to select the LIBSVM parameters by grid searching. Table 1 displays the \textbf{exponential parts} of the LIBSVM parameters of the 14 models.\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Attribute Index} & \textbf{-c} & \textbf{-g} & \textbf{-p} \\ \hline
+		1 & 13 & -7 & -5 \\ \hline
+		2 & 3 & 1 & -3 \\ \hline
+		3 & 11 & -11 & -7  \\ \hline
+		4 & 5 & 1 & -7 \\ \hline
+		5 & 7 & -1 & -3 \\ \hline
+		6 & 7 & -3 & -1 \\ \hline
+		7 & 11 & -7 & -5 \\ \hline
+		8 & 5 & -1 & -7 \\ \hline
+		9 & 3 & 1 & -5 \\ \hline
+		10 & 1 & 3 & -9 \\ \hline
+		11 & 7 & -7 & -5 \\ \hline
+		12 & 5 & -7 & -3 \\ \hline
+		13 & 11 & -9 & -5 \\ \hline
+		14 & 11 & -5 & -3 \\ \hline
+ 		\end{tabular}
+		\caption{The exponential parts of the LIBSVM parameters of the 14 models.}\label{tab1}
+	\end{table}\\
+	After that, by training and testing SVMs separately for each class using the parameters we determine before, we evaluate the accuracy as well as the precision. Table 2 displays the training accuracy, the testing accuracy, the training precision and the testing precision for each class. From the table, we observe that our SVMs perform quite well on testing samples.\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Attribute Index} & \textbf{Accuracy (Train)} & \textbf{Accuracy (Test)} & \textbf{Precision (Train)} & \textbf{Precision (Test)} \\ \hline
+		1 & 0.7544 & 0.6652 & 0.8463 & 0.4921\\ \hline
+		2 & 0.7268 & 0.5931 & 0.7559 & 0.6477\\ \hline
+		3 & 0.6783 & 0.5784 & 0.6912 & 0.6082\\ \hline
+		4 & 0.8257 & 0.6917 & 0.9392 & 0.5954\\ \hline
+		5 & 0.7466 & 0.6891 & 0.7457 & 0.6391\\ \hline
+		6 & 0.7032 & 0.5249 & 0.6530 & 0.6445\\ \hline
+		7 & 0.7591 & 0.7193 & 0.7285 & 0.6801\\ \hline
+		8 & 0.7726 & 0.5829 & 0.7991 & 0.5693\\ \hline
+		9 & 0.8254 & 0.6008 & 0.8754 & 0.7384\\ \hline
+		10 & 0.8731 & 0.6170 & 0.9125 & 0.7852\\ \hline
+		11 & 0.6407 & 0.5864 & 0.6614 & 0.6039\\ \hline
+		12 & 0.6259 & 0.6068 & 0.6879 & 0.5825\\ \hline
+		13 & 0.6883 & 0.5743 & 0.8018 & 0.7227\\ \hline
+		14 & 0.7394 & 0.5990 & 0.7443 & 0.6733\\ \hline
+ 		\end{tabular}
+		\caption{The accuracies and the precisions for 14 trait classes.}\label{tab2}
+	\end{table}\\
+
+\section*{\small{1.2: Classification by Rich Features}}
+	In this section, we follow the similar procedure as 1.1 except for using the concatenation of the original landmark features and the HoG features. Table 3 displays the \textbf{exponential parts} of the LIBSVM parameters of the 14 models. \\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Attribute Index} & \textbf{-c} & \textbf{-g} & \textbf{-p} \\ \hline
+		1 & 5 & -11 & -1 \\ \hline
+		2 & 3 & -11 & -5 \\ \hline
+		3 & 5 & -11 & -3  \\ \hline
+		4 & 1 & -9 & -9 \\ \hline
+		5 & 1 & -11 & -9 \\ \hline
+		6 & 5 & -11 & -3 \\ \hline
+		7 & 3 & -9 & -5 \\ \hline
+		8 & -1 & -9 & -5 \\ \hline
+		9 & 1 & -11 & -3 \\ \hline
+		10 & 3 & -11 & -9 \\ \hline
+		11 & 1 & -11 & -5 \\ \hline
+		12 & 1 & -11 & -5 \\ \hline
+		13 & -1 & -7 & -3 \\ \hline
+		14 & 3 & -11 & -7 \\ \hline
+ 		\end{tabular}
+		\caption{The exponential parts of the LIBSVM parameters of the 14 models (HoG features included).}\label{tab3}
+	\end{table}\\
+	
+	 Table 4 displays the training accuracy, the testing accuracy, the training precision and the testing precision for each class. From Table 4, we find out that both the accuracy and the precision outperforms those in Table 2, meaning that the addition of HoG features really help to train better SVMs.\\
+	 \begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Attribute Index} & \textbf{Accuracy (Train)} & \textbf{Accuracy (Test)} & \textbf{Precision (Train)} & \textbf{Precision (Test)} \\ \hline
+		1 & 0.7283 & 0.6963 & 0.7845 & 0.5930\\ \hline
+		2 & 0.9197 & 0.7211 & 0.9001 & 0.7279\\ \hline
+		3 & 0.8203 & 0.7059 & 0.7928 & 0.6853\\ \hline
+		4 & 0.9261 & 0.6894 & 0.9515 & 0.6444\\ \hline
+		5 & 0.7846 & 0.6765 & 0.7794 & 0.6926\\ \hline
+		6 & 0.7911 & 0.5942 & 0.8062 & 0.6570\\ \hline
+		7 & 0.9053 & 0.6128 & 0.8997 & 0.7152\\ \hline
+		8 & 0.8448 & 0.6844 & 0.7586 & 0.6695\\ \hline
+		9 & 0.7652 & 0.6092 & 0.7353 & 0.7828\\ \hline
+		10 & 0.8974 & 0.7369 & 0.9646 & 0.7936\\ \hline
+		11 & 0.8069 & 0.6817 & 0.8309 & 0.7381\\ \hline
+		12 & 0.8097 & 0.6530 & 0.8164 & 0.6707\\ \hline
+		13 & 0.7862 & 0.6898 & 0.8069 & 0.7415\\ \hline
+		14 & 0.8845 & 0.6977 & 0.8780 & 0.7398\\ \hline
+ 		\end{tabular}
+		\caption{The accuracies and the precisions for 14 trait classes (HoG features included).}\label{tab4}
+	\end{table}\\
+\newpage\section*{\large{Task 2: Election Outcome Prediction}}
+	Now, we can predict the election outcome based on the features and models derived in the previous part.\\ 
+\section*{\small{2.1: Direction Prediction by Rich Features}}
+	In this section, we use the same features that we develop in the section 1.2 to train a classifier to classify the election outcome. Table 4 displays the chosen model parameters, and Table 6 displays the average accuracies on training and testing data.\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Politician Category} & \textbf{-c} & \textbf{-g} & \textbf{-p} \\ \hline
+		Governor & -5 & -5 & -9 \\ \hline
+		Senator & -5 & -7 & -9 \\ \hline
+ 		\end{tabular}
+		\caption{The exponential parts of the LIBSVM parameters to predict election outcomes.}\label{tab5}
+	\end{table}\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Politician Category} & \textbf{Accuracy (Train)} & \textbf{Accuracy (Test)} \\ \hline
+		Governor & 1 & 0.6179 \\ \hline
+		Senator & 1 & 0.6056 \\ \hline
+ 		\end{tabular}
+		\caption{The accuracies of election outcome predictions.}\label{tab6}
+	\end{table}\\
+\section*{\small{2.2: Prediction by Face Social Traits}}
+	In this section, we convert each facial image into a 14-d vector representing the traits of that politician. Then, we train SVM classifiers on the ensemble of trait vectors and make predictions. Table 7 displays the average accuracies on training and testing data, and Table 8 displays the chosen parameters. Comparing Table 5 with Table 7, we notice that although the one-layer model (Table 5) achieves perfect predictions on training samples, its performance is similar to the two-layer model (Table 7) on the testing set. Hence, we speculate that the one-layer model is a little bit overfitting, and the two-layer model is less biased.\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|c|}
+		\hline
+		\textbf{Politician Category} & \textbf{-c} & \textbf{-g} & \textbf{-p} \\ \hline
+		Governor & -3 & 5 & -11 \\ \hline
+		Senator & -3 & 3 & -9 \\ \hline
+ 		\end{tabular}
+		\caption{The exponential parts of the LIBSVM parameters to predict election outcomes (two-layer model).}\label{tab7}
+	\end{table}\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Politician Category} & \textbf{Accuracy (Train)} & \textbf{Accuracy (Test)} \\ \hline
+		Governor & 0.7408 & 0.6202 \\ \hline
+		Senator & 0.7217 & 0.5733 \\ \hline
+ 		\end{tabular}
+		\caption{The accuracies of election outcome predictions (two-layer model).}\label{tab8}
+	\end{table}\\
+
+\section*{\small{2.3: Analysis of Results}}
+	To further our analysis, we calculate the correlation between the traits and the vote differences and put the correlation coefficients in Table 9. From the table, we realize that candidates' traits do have certain effects on the election outcome. While having some of the traits are beneficial to governors, it may be undesirable to senators.\\
+	\begin{table}[ht]
+ 		\centering
+ 		\begin{tabular}{|c|c|c|}
+		\hline
+		\textbf{Attribute Index} & \textbf{Governor} & \textbf{Senator} \\ \hline
+		1 & -0.10 & 0.13 \\ \hline
+		2 & 0.31 & -0.08 \\ \hline
+		3 & -0.14 & -0.12 \\ \hline
+		4 & 0.06 & 0.16 \\ \hline
+		5 & 0.41 & -0.10 \\ \hline
+		6 & 0.22 & -0.26 \\ \hline
+		7 & 0.21 & 0.17 \\ \hline
+		8 & -0.07 & 0.18 \\ \hline
+		9 & -0.11 & -0.03 \\ \hline
+		10 & 0.04 & 0.09 \\ \hline
+		11 & -0.01 & 0.20 \\ \hline
+		12 & 0.25 & -0.13 \\ \hline
+		13 & 0.12 & 0.22 \\ \hline
+		14 & 0.17 & -0.29 \\ \hline
+ 		\end{tabular}
+		\caption{The correlation coefficients between attributes and vote differences for governors and senators.}\label{tab6}
+	\end{table}\\
+\end{document}
